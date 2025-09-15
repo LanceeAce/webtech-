@@ -1,4 +1,4 @@
-import owner from '../assets/owner.png';
+import owner from '../assets/ownerr.png';
 
 const Home = () => {
   return (

@@ -1,0 +1,7 @@
+/* signup.module.css */
+.signupPage {
+  background-image: url(../../assets/bg.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh; /* para buo ang height ng page */
+}

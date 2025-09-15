@@ -53,13 +53,13 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Navigation */}
+    
       <nav
         className={`${
           isOpen ? "flex" : "hidden"
         } flex-col gap-4 mt-12 md:mt-0 md:flex md:flex-row items-center md:bg-[#FFF5D0] bg-amber-50 md:gap-6 text-gray-700 font-medium md:relative absolute right-5`}
       >
-        <a href="#" className="hover:text-orange-500 transition">
+        <a href="/" className="hover:text-orange-500 transition">
           Home
         </a>
         <a href="#" className="hover:text-orange-500 transition">
@@ -68,7 +68,7 @@ const Header = () => {
         <a href="#" className="hover:text-orange-500 transition">
           Form
         </a>
-        <a href="#" className="hover:text-orange-500 transition">
+        <a href="/about" className="hover:text-orange-500 transition">
           About
         </a>
 
