@@ -1,1 +1,18 @@
 @import "tailwindcss";
+@keyframes shrinkToCircle {
+  0% {
+    width: 100%;
+    height: 100%;
+    border-radius: 0%;
+  }
+  100% {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+  }
+}
+
+.animate-shrink {
+  animation: shrinkToCircle .5s ease-in-out forwards;
+  margin: auto; 
+}

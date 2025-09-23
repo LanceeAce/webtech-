@@ -3,23 +3,60 @@ import sign from '../assets/sign.png';
 import logo from '../assets/logosign.png';
 import styles from './Css/signup.module.css';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext'; 
 
 function Signin() {
-   const navigate = useNavigate();
-   const handleNavigation = () => {
-  navigate('/Signup');
-};
+  const navigate = useNavigate();
+  const { login } = useAuth(); 
+
+  const handleNavigation = () => {
+    navigate('/Signup');
+  };
+
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+
   const [showPassword, setShowPassword] = useState(false);
 
- 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setMessageType('');
+
+    try {
+      const res = await axios.post('http://localhost:5000/api/signin', {
+        email,
+        password,
+      });
+
+      setMessage(res.data.msg);
+      setMessageType('success');
+      console.log('Login successful:', res.data.msg);
+
+     
+      login({ email: res.data.email });
+      navigate('/'); 
+
+    } catch (err) {
+      const errorMessage = err.response?.data?.msg || 'Invalid email or password. Please try again.';
+      setMessage(errorMessage);
+      setMessageType('error');
+      console.error('Login failed:', errorMessage);
+    }
+  };
+
   return (
-   <div className={styles.signupPage}>
+    <div className={styles.signupPage}>
       <div className="flex flex-col md:flex-row items-center justify-center p-4 min-h-screen md:p-10 md:max-w-6xl md:mx-auto rounded-2xl">
-        
 
         <div className="hidden md:flex w-full md:w-1/2 justify-center items-center bg-[#FFF5D0] md:p-20 rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none h-full">
           <div className="text-center">
@@ -29,27 +66,40 @@ function Signin() {
           </div>
         </div>
 
-
-        <div className="w-full md:w-1/2 flex items-center justify-center rounded-2xl md:rounded-tl-none  md:rounded-bl-none p-6 md:p-20 bg-white h-full">
+        <div className="w-full md:w-1/2 flex items-center justify-center rounded-2xl md:rounded-tl-none  md:rounded-bl-none p-6 md:p-20 bg-white h-full">
           <div className="w-full max-w-md">
             <h2 className="text-3xl font-bold md:mb-10 text-center text-[#333333]">Sign In</h2>
-          <form className="space-y-8">
-            <div>
-              <label htmlFor="email" className="block text-m font-medium text-gray-700">Email address</label>
-              <input type="email" id="email" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100 p-2" placeholder="Enter your email" />
-            </div>
-           <div>
-                <label htmlFor="password" className="block text-m font-medium text-gray-700"> password</label>
-               
+
+            {message && (
+              <div className={`p-4 rounded-md mt-4 text-center ${messageType === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {message}
+              </div>
+            )}
+
+            <form className="space-y-8" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="email" className="block text-m font-medium text-gray-700">Email address</label>
+                <input
+                  type="email"
+                  id="email"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100 p-2"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-m font-medium text-gray-700">password</label>
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100 p-2"
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-            <div className="flex items-center">
-                
+              <div className="flex items-center">
                 <input
                   id="show-password"
                   type="checkbox"
@@ -58,22 +108,24 @@ function Signin() {
                 />
                 <label htmlFor="show-password" className="ml-2 block text-sm text-gray-900">Show password</label>
               </div>
-            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#F39C12] hover:bg-[#E67E22] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#E67E22]">
-              Sign in
-            </button>
-          </form>
-          <div className="mt-6 text-center text-sm text-gray-500 relative">
-            <span className="bg-white px-2">Don't have an account?</span>
-            <div className="absolute inset-x-0 top-1/2 h-px bg-gray-300 -z-10"></div>
-          </div>
-          <div className='text-center'>
-          <button onClick={handleNavigation} className="mt-2    py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Sign up Here
-          </button>
+              <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#F39C12] hover:bg-[#E67E22] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#E67E22]">
+                  Sign in
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-500 relative">
+              <span className="bg-white px-2">Don't have an account?</span>
+              <div className="absolute inset-x-0 top-1/2 h-px bg-gray-300 -z-10"></div>
+            </div>
+
+            <div className='text-center'>
+              <button onClick={handleNavigation} className="mt-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Sign up Here
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
