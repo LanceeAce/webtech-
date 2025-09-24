@@ -6,6 +6,7 @@ import About from './pages/About';
 import Signin from './pages/Signin';
 import Signup from './pages/Signup';
 import { Adopt } from './pages/Adopt';
+import  Form  from './pages/Form';
 
 import { Routes, Route } from 'react-router-dom';
 
@@ -13,7 +14,7 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        {/* Ang mga page na ito ay may kasamang header */}
+       
         <Route path="/" element={
           <>
             <Header />
@@ -26,14 +27,25 @@ function App() {
             <Adopt />
           </>
         } />
+        
         <Route path="/about" element={
           <>
             <Header />
             <About />
           </>
         } />
+
+        <Route
+          path="/form"
+          element={
+            <>
+              <Header />
+              <Form />
+            </>
+          }
+        />
         
-        {/* Ang mga page na ito ay walang header */}
+       
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
       </Routes>
